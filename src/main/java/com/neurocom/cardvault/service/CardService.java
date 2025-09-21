@@ -8,12 +8,15 @@ import com.neurocom.cardvault.dto.CreateCardRequestDTO;
 import com.neurocom.cardvault.repo.CardRepository;
 import com.neurocom.cardvault.util.LuhnUtil;
 import com.neurocom.cardvault.util.MaskingUtil;
+import jakarta.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CardService {
     private final CardRepository cardRepo;
@@ -27,13 +30,25 @@ public class CardService {
     //create new card
     @Transactional
     public CardResponseDTO create(CreateCardRequestDTO req) {
-        String pan = req.getPan().trim();
-        String name = req.getCardholderName().trim();
-
-        // verify PAN
-        if (!LuhnUtil.isValidPan(pan)) {
-            throw new IllegalArgumentException("Invalid PAN: Luhn check failed");
+        String name = req.getCardholderName() == null ? "" : req.getCardholderName().trim();
+        String pan = req.getPan();
+        if (pan == null) {
+            throw new IllegalArgumentException("PAN is required");
         }
+
+        // ✅ 统一标准化：删除所有“非数字”字符（空格、短横线、全角空格等统统去掉）
+        pan = pan.replaceAll("\\D", "");
+
+        // ✅ 只检查固定长度 12 位
+        if (!pan.matches("\\d{12}")) {
+            throw new IllegalArgumentException("PAN must be exactly 12 digits");
+        }
+
+//        // ✅ Luhn
+//        if (!LuhnUtil.isValidPan(pan)) {
+//            throw new IllegalArgumentException("Invalid PAN: Luhn check failed");
+//        }
+
         // find last4
         String last4 = pan.substring(pan.length() - 4);
 
@@ -52,7 +67,9 @@ public class CardService {
         card.setSecret(secret);
 
         // save to db
-        Card saved = cardRepo.save(card);
+        log.info("before save createdAt={}", card.getCreatedAt());
+        Card saved = cardRepo.saveAndFlush(card);
+        log.info("after  save createdAt={}", saved.getCreatedAt());
         // response DTO
         return new CardResponseDTO(
                 saved.getCardholderName(),
@@ -62,7 +79,7 @@ public class CardService {
     }
 
     @Transactional
-    public List<CardResponseDTO> search(String last4, String nameOpt){
+    public List<CardResponseDTO> search(String last4, @Nullable String nameOpt){
         List<Card> results;
         if (nameOpt == null || nameOpt.isBlank()) {
             results = cardRepo.findByLast4(last4);
@@ -73,6 +90,6 @@ public class CardService {
                 c.getCardholderName(),
                 MaskingUtil.maskFromLast4(c.getLast4()),
                 c.getCreatedAt()
-        )).collect(Collectors.toList());
+        )).toList();
     }
 }

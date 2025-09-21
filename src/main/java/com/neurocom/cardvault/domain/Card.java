@@ -1,6 +1,7 @@
 package com.neurocom.cardvault.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -16,6 +17,8 @@ public class Card {
 
     private String cardholderName;
     private String last4;
+    @CreationTimestamp
+    @Column(name = "create_at", nullable = false, updatable = false)
     private Instant createdAt;
     @OneToOne(mappedBy = "card",
             cascade = CascadeType.ALL,
@@ -53,6 +56,13 @@ public class Card {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = Instant.now();
+        }
     }
 
     public CardSecret getSecret() {

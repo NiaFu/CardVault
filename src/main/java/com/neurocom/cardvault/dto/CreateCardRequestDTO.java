@@ -15,6 +15,8 @@ public class CreateCardRequestDTO {
     @Pattern(regexp = "\\d{12,19}", message = "PAN must be 12-19 digits")
     private String pan;
 
+    public CreateCardRequestDTO(){}
+
     public String getCardholderName() {
         return cardholderName;
     }

@@ -25,6 +25,7 @@ public class CardController {
         return service.create(req);
     }
 
+    @GetMapping
     public List<CardResponseDTO> search(@RequestParam("last4")
                                         @Pattern(regexp = "\\d{4}", message = "last4 must be 4 digits")
                                         String last4,

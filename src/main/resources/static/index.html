@@ -1,10 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8" />
+    <title>Card Vault</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+        :root {
+            --primary:#409EFF;
+            --primary-hover:#66b1ff;
+            --success:#67C23A;
+            --danger:#F56C6C;
+            --text:#303133;
+            --border:#dcdfe6;
+            --radius:6px;
+            --bg:#f5f7fa;
+        }
+        *{box-sizing:border-box;}
+        body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto; background:var(--bg); color:var(--text);}
+        .container { max-width: 900px; margin:40px auto; padding:0 20px;}
+        h1 { font-size:26px; margin-bottom:20px; }
+
+        /* 卡片 */
+        .el-card {
+            background:#fff; border:1px solid var(--border);
+            border-radius:var(--radius); box-shadow:0 2px 12px rgba(0,0,0,.1);
+            padding:20px; margin-bottom:20px;
+        }
+        .el-card h2 { font-size:18px; margin-bottom:16px; }
+
+        /* 输入框 */
+        .el-input {
+            width:100%; padding:10px 12px;
+            border:1px solid var(--border); border-radius:var(--radius);
+            transition:border-color .2s;
+        }
+        .el-input:focus { border-color:var(--primary); outline:none; }
+
+        .el-form-item { margin-bottom:16px; }
+        .el-form-item label { display:block; margin-bottom:6px; font-weight:500; }
+
+        /* 按钮 */
+        .el-button {
+            display:inline-block; padding:10px 16px; font-size:14px;
+            border-radius:var(--radius); cursor:pointer; border:1px solid transparent;
+            transition:all .2s; user-select:none;
+        }
+        .el-button--primary { background:var(--primary); color:#fff; }
+        .el-button--primary:hover { background:var(--primary-hover); }
+        .el-button--default { background:#fff; border:1px solid var(--border); }
+        .el-button--default:hover { border-color:var(--primary); color:var(--primary); }
+
+        /* 表格 */
+        table { width:100%; border-collapse:collapse; }
+        th, td { padding:12px; border-bottom:1px solid var(--border); text-align:left; }
+        thead { background:#f2f6fc; }
+        tbody tr:hover { background:#f9f9f9; }
+
+        /* Toast */
+        .toast-container { position:fixed; top:20px; right:20px; z-index:1000; }
+        .toast {
+            min-width:220px; margin-bottom:10px; padding:12px 16px;
+            border-radius:var(--radius); color:#fff; box-shadow:0 2px 8px rgba(0,0,0,.15);
+            animation:fadein .3s ease;
+        }
+        .toast.success { background:var(--success); }
+        .toast.error { background:var(--danger); }
+        @keyframes fadein { from{opacity:0;transform:translateY(-10px);} to{opacity:1;transform:translateY(0);} }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>Card Vault Demo</h1>
 
+    <!-- Add -->
+    <div class="el-card">
+        <h2>Add a Card</h2>
+        <form id="addForm">
+            <div class="el-form-item">
+                <label>Cardholder Name</label>
+                <input class="el-input" type="text" name="cardholderName" required />
+            </div>
+            <div class="el-form-item">
+                <label>PAN (12 digits)</label>
+                <input class="el-input" type="text" name="pan" maxlength="12" required />
+            </div>
+            <button type="submit" class="el-button el-button--primary">Add Card</button>
+        </form>
+    </div>
+
+    <!-- Search -->
+    <div class="el-card">
+        <h2>Search Cards</h2>
+        <form id="searchForm">
+            <div class="el-form-item">
+                <label>Last 4 digits</label>
+                <input class="el-input" type="text" name="last4" maxlength="4" required />
+            </div>
+            <div class="el-form-item">
+                <label>Cardholder Name (optional)</label>
+                <input class="el-input" type="text" name="name" />
+            </div>
+            <button type="submit" class="el-button el-button--default">Search</button>
+        </form>
+    </div>
+
+    <!-- Results -->
+    <div class="el-card">
+        <h2>Results</h2>
+        <table id="resultsTable">
+            <thead>
+            <tr>
+                <th>Cardholder Name</th>
+                <th>Masked PAN</th>
+                <th>Created At</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td colspan="3" style="text-align:center;color:#999">No data</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+    const apiBase = "/api/cards";
+
+    function toast(msg,type="success",ms=3000){
+        const cont = document.getElementById("toastContainer");
+        const el = document.createElement("div");
+        el.className = "toast "+type;
+        el.textContent = msg;
+        cont.appendChild(el);
+        setTimeout(()=>el.remove(), ms);
+    }
+
+    function formatDate(iso){ return iso ? new Date(iso).toLocaleString() : ""; }
+
+    function renderRows(list){
+        const tbody = document.querySelector("#resultsTable tbody");
+        tbody.innerHTML="";
+        if(!list||list.length===0){
+            tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:#999">No data</td></tr>`;
+            return;
+        }
+        list.forEach(c=>{
+            tbody.insertAdjacentHTML("beforeend",`<tr>
+        <td>${c.cardholderName||""}</td>
+        <td>${c.maskedPan||""}</td>
+        <td>${formatDate(c.createdAt)}</td>
+      </tr>`);
+        });
+    }
+
+    document.getElementById("addForm").addEventListener("submit", async e=>{
+        e.preventDefault();
+        const form = e.target;
+        const payload = {
+            cardholderName: form.cardholderName.value.trim(),
+            pan: (form.pan.value||"").replace(/\D/g,"")
+        };
+        const res = await fetch(apiBase,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+        const data = await res.json();
+        if(!res.ok){ toast(data.message||"Add failed","error"); return; }
+        toast("Card added successfully!","success");
+        form.reset();
+    });
+
+    document.getElementById("searchForm").addEventListener("submit", async e=>{
+        e.preventDefault();
+        const form = e.target;
+        const params = new URLSearchParams();
+        params.set("last4", form.last4.value.trim());
+        if(form.name.value.trim()) params.set("name", form.name.value.trim());
+        const res = await fetch(`${apiBase}?${params.toString()}`);
+        const data = await res.json();
+        if(!res.ok){ toast(data.message||"Search failed","error"); return; }
+        renderRows(data);
+    });
+</script>
 </body>
 </html>

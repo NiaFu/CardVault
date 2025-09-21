@@ -5,12 +5,12 @@ import java.time.Instant;
 public class CardResponseDTO {
     private String cardholderName;
     private String maskedPan; // **** **** 1234
-    private Instant createdTime; // UTC time
+    private Instant createdAt; // UTC time
 
-    public CardResponseDTO(String cardholderName, String maskedPan, Instant createdTime) {
+    public CardResponseDTO(String cardholderName, String maskedPan, Instant createdAt) {
         this.cardholderName = cardholderName;
         this.maskedPan = maskedPan;
-        this.createdTime = createdTime;
+        this.createdAt = createdAt;
     }
 
     public String getCardholderName() {
@@ -21,7 +21,7 @@ public class CardResponseDTO {
         return maskedPan;
     }
 
-    public Instant getCreatedTime() {
-        return createdTime;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 }
