@@ -1,4 +1,7 @@
 package com.neurocom.cardvault.crypto;
+/**
+ * Provides AES-GCM encryption and decryption for PAN values.
+ */
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -6,10 +9,6 @@ import javax.crypto.spec.GCMParameterSpec;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
-
-/**
- * Encryption and decryption are implemented using AES/GCM/NoPadding
- */
 
 public class CryptoService {
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
@@ -23,11 +22,11 @@ public class CryptoService {
         this.key = key;
     }
 
-    //Internally encapsulate the encryption result
+    /** Result container for ciphertext + IV (both Base64-encoded). */
     public static record EncResult(String ciphertextB64, String ivB64) {}
 
     /**
-     * encrypt
+     * Encrypt plaintext PAN and return ciphertext + IV.
      * @param plaintext
      * @return
      */
@@ -50,7 +49,7 @@ public class CryptoService {
     }
 
     /**
-     * decode
+     * Decrypt ciphertext + IV and return the original PAN.
      * @param ciphertextB64
      * @param ivB64
      * @return

@@ -1,5 +1,9 @@
 package com.neurocom.cardvault.web;
-
+/**
+ * Global exception handler.
+ *
+ * Converts common errors into consistent JSON responses.
+ */
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -28,7 +32,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> illegal(IllegalArgumentException ex, HttpServletRequest req) {
-        // 我们在 Service 里专门用它表示业务校验失败（例如 Luhn 未通过）
         return body(HttpStatus.BAD_REQUEST, ex.getMessage(), req.getRequestURI());
     }
 

@@ -1,12 +1,16 @@
 package com.neurocom.cardvault.dto;
+/**
+ * Request DTO for creating a new card.
+ *
+ * Carries the cardholder name and the raw PAN provided by the user.
+ * - cardholderName: required, max 100 characters
+ * - pan: required, must be 12 digits (validated here, encrypted later)
+ */
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-/****
- * create new card
- */
 public class CreateCardRequestDTO {
     @NotBlank
     @Size(max = 100)

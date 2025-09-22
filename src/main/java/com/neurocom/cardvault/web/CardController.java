@@ -1,5 +1,13 @@
 package com.neurocom.cardvault.web;
 
+/**
+ * REST controller for card operations.
+ *
+ * Exposes endpoints to:
+ * - Create a new card (POST /api/cards)
+ * - Search cards by last 4 digits (GET /api/cards)
+ */
+
 import com.neurocom.cardvault.domain.Card;
 import com.neurocom.cardvault.dto.CardResponseDTO;
 import com.neurocom.cardvault.dto.CreateCardRequestDTO;
@@ -19,12 +27,22 @@ public class CardController {
         this.service = service;
     }
 
-    //create new card
+    /**
+     * Create a new card record.
+     * @param req request containing cardholder name and PAN
+     * @return response with masked PAN and created timestamp
+     */
     @PostMapping
     public CardResponseDTO create(@Valid @RequestBody CreateCardRequestDTO req){
         return service.create(req);
     }
 
+    /**
+     * Search cards by last 4 digits, optionally filtered by cardholder name.
+     * @param last4 required, must be 4 digits
+     * @param name optional cardholder name filter
+     * @return list of matching cards with masked PAN
+     */
     @GetMapping
     public List<CardResponseDTO> search(@RequestParam("last4")
                                         @Pattern(regexp = "\\d{4}", message = "last4 must be 4 digits")

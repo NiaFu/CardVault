@@ -1,4 +1,14 @@
 package com.neurocom.cardvault.domain;
+/**
+ * Card entity.
+ *
+ * Stores non-sensitive cardholder information:
+ * - Cardholder name
+ * - Last 4 digits of the PAN (for search/display)
+ * - Record creation time
+ *
+ * The full encrypted PAN is stored separately in the CardSecret entity.
+ */
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,11 +25,17 @@ public class Card {
     @GeneratedValue
     private UUID id;
 
+    /** Cardholder's name */
     private String cardholderName;
+
+    /** Last 4 digits of the PAN, for searching */
     private String last4;
+
+    /** Record creation time */
     @CreationTimestamp
     @Column(name = "create_at", nullable = false, updatable = false)
     private Instant createdAt;
+
     @OneToOne(mappedBy = "card",
             cascade = CascadeType.ALL,
             orphanRemoval = true,

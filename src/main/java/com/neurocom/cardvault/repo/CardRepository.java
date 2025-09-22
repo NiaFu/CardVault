@@ -1,4 +1,9 @@
 package com.neurocom.cardvault.repo;
+/**
+ * Repository for Card entities.
+ *
+ * Provides methods to search cards by last 4 digits and by cardholder name.
+ */
 
 import com.neurocom.cardvault.domain.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,14 +15,14 @@ public interface CardRepository extends JpaRepository <Card, UUID> {
     //save, findById, findAll, deleteById
 
     /***
-     * search by last4
+     * Find cards by last 4 digits.
      * @param last4
      * @return
      */
     List<Card> findByLast4(String last4);
 
     /***
-     * search by last4 and cardholder
+     * Find cards by last 4 digits and cardholder name.
      * @param last4
      * @param cardholderName
      * @return

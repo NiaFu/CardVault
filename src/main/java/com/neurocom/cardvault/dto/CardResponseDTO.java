@@ -1,4 +1,12 @@
 package com.neurocom.cardvault.dto;
+/**
+ * Response DTO for returning card details.
+ *
+ * Contains only non-sensitive information:
+ * - cardholderName: the name of the cardholder
+ * - maskedPan: PAN masked for display (e.g., **** **** 1234)
+ * - createdAt: record creation time (UTC)
+ */
 
 import java.time.Instant;
 

@@ -1,7 +1,15 @@
 package com.neurocom.cardvault.domain;
+/**
+ * CardSecret entity.
+ *
+ * Stores sensitive card data in encrypted form:
+ * - Encrypted PAN (AES-GCM ciphertext)
+ * - Initialization Vector (IV) used for encryption
+ *
+ * Linked one-to-one with Card, sharing the same primary key (card_id).
+ */
 
 import jakarta.persistence.*;
-
 import java.util.UUID;
 
 @Entity
@@ -9,12 +17,18 @@ import java.util.UUID;
 public class CardSecret {
     @Id
     private UUID id;
+
+    /** Reference to the associated Card  */
     @OneToOne
     @MapsId
     @JoinColumn(name = "card_id")
     private Card card;
+
+    /** Encrypted PAN stored as ciphertext */
     @Column(name = "pan_ciphertext", nullable = false, length = 4096)
     private String panCiphertext; // secret AES-GCM
+
+    /** Random IV used during encryption */
     @Column(name = "pan_iv", nullable = false, length = 64)
     private String panIv; // random IV
 

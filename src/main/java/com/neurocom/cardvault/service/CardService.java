@@ -1,4 +1,13 @@
 package com.neurocom.cardvault.service;
+/**
+ * Service layer for managing cards.
+ *
+ * Handles:
+ * - Creating new cards (encrypts PAN and stores last 4 digits)
+ * - Searching cards by last 4 digits (optionally filtered by name)
+ *
+ * Sensitive data is encrypted via CryptoService entity and masked in responses.
+ */
 
 import com.neurocom.cardvault.crypto.CryptoService;
 import com.neurocom.cardvault.domain.Card;
@@ -27,6 +36,11 @@ public class CardService {
         this.crypto = crypto;
     }
 
+    /**
+     * Create and save a new card.
+     * @param req  request containing cardholder name and raw PAN
+     * @return response with masked PAN and created timestamp
+     */
     //create new card
     @Transactional
     public CardResponseDTO create(CreateCardRequestDTO req) {
@@ -36,26 +50,21 @@ public class CardService {
             throw new IllegalArgumentException("PAN is required");
         }
 
-        // ✅ 统一标准化：删除所有“非数字”字符（空格、短横线、全角空格等统统去掉）
+        // Standardize: keep only digits
         pan = pan.replaceAll("\\D", "");
 
-        // ✅ 只检查固定长度 12 位
+        // Validate length
         if (!pan.matches("\\d{12}")) {
             throw new IllegalArgumentException("PAN must be exactly 12 digits");
         }
 
-//        // ✅ Luhn
-//        if (!LuhnUtil.isValidPan(pan)) {
-//            throw new IllegalArgumentException("Invalid PAN: Luhn check failed");
-//        }
-
-        // find last4
+        // // Extract last 4
         String last4 = pan.substring(pan.length() - 4);
 
         // encrypt
         var enc = crypto.encrypt(pan);
 
-        //make entity
+        // Build entity
         Card card = new Card();
         card.setCardholderName(name);
         card.setLast4(last4);
@@ -66,11 +75,11 @@ public class CardService {
 
         card.setSecret(secret);
 
-        // save to db
+        // save
         log.info("before save createdAt={}", card.getCreatedAt());
         Card saved = cardRepo.saveAndFlush(card);
         log.info("after  save createdAt={}", saved.getCreatedAt());
-        // response DTO
+        // response masked response
         return new CardResponseDTO(
                 saved.getCardholderName(),
                 MaskingUtil.maskFromLast4(saved.getLast4()),
@@ -78,6 +87,12 @@ public class CardService {
         );
     }
 
+    /**
+     * Search cards by last 4 digits, optionally filtered by cardholder name.
+     * @param last4 last 4 digits of the PAN
+     * @param nameOpt optional cardholder name filter
+     * @return list of matching cards with masked PAN
+     */
     @Transactional
     public List<CardResponseDTO> search(String last4, @Nullable String nameOpt){
         List<Card> results;
