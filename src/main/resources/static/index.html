@@ -20,7 +20,7 @@
         .container { max-width: 900px; margin:40px auto; padding:0 20px;}
         h1 { font-size:26px; margin-bottom:20px; }
 
-        /* 卡片 */
+        /* Card-style panels */
         .el-card {
             background:#fff; border:1px solid var(--border);
             border-radius:var(--radius); box-shadow:0 2px 12px rgba(0,0,0,.1);
@@ -28,7 +28,7 @@
         }
         .el-card h2 { font-size:18px; margin-bottom:16px; }
 
-        /* 输入框 */
+        /* Input fields */
         .el-input {
             width:100%; padding:10px 12px;
             border:1px solid var(--border); border-radius:var(--radius);
@@ -39,7 +39,7 @@
         .el-form-item { margin-bottom:16px; }
         .el-form-item label { display:block; margin-bottom:6px; font-weight:500; }
 
-        /* 按钮 */
+        /* Buttons */
         .el-button {
             display:inline-block; padding:10px 16px; font-size:14px;
             border-radius:var(--radius); cursor:pointer; border:1px solid transparent;
@@ -50,7 +50,7 @@
         .el-button--default { background:#fff; border:1px solid var(--border); }
         .el-button--default:hover { border-color:var(--primary); color:var(--primary); }
 
-        /* 表格 */
+        /* Table */
         table { width:100%; border-collapse:collapse; }
         th, td { padding:12px; border-bottom:1px solid var(--border); text-align:left; }
         thead { background:#f2f6fc; }
@@ -72,7 +72,7 @@
 <div class="container">
     <h1>Card Vault Demo</h1>
 
-    <!-- Add -->
+    <!-- Add Card Form -->
     <div class="el-card">
         <h2>Add a Card</h2>
         <form id="addForm">
@@ -88,7 +88,7 @@
         </form>
     </div>
 
-    <!-- Search -->
+    <!-- Search Form -->
     <div class="el-card">
         <h2>Search Cards</h2>
         <form id="searchForm">
@@ -104,7 +104,7 @@
         </form>
     </div>
 
-    <!-- Results -->
+    <!-- Search Results Table -->
     <div class="el-card">
         <h2>Results</h2>
         <table id="resultsTable">
@@ -127,6 +127,7 @@
 <script>
     const apiBase = "/api/cards";
 
+    // Show toast notifications
     function toast(msg,type="success",ms=3000){
         const cont = document.getElementById("toastContainer");
         const el = document.createElement("div");
@@ -136,8 +137,10 @@
         setTimeout(()=>el.remove(), ms);
     }
 
+    // Format timestamp
     function formatDate(iso){ return iso ? new Date(iso).toLocaleString() : ""; }
 
+    // Render search results
     function renderRows(list){
         const tbody = document.querySelector("#resultsTable tbody");
         tbody.innerHTML="";
@@ -154,6 +157,7 @@
         });
     }
 
+    // Handle add form submit
     document.getElementById("addForm").addEventListener("submit", async e=>{
         e.preventDefault();
         const form = e.target;
@@ -168,6 +172,7 @@
         form.reset();
     });
 
+    // Handle search form submit
     document.getElementById("searchForm").addEventListener("submit", async e=>{
         e.preventDefault();
         const form = e.target;
