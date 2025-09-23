@@ -1,11 +1,11 @@
-package com.neurocom.cardvault.repo;
+package com.niafu.cardvault.repo;
 /**
  * Repository for Card entities.
  *
  * Provides methods to search cards by last 4 digits and by cardholder name.
  */
 
-import com.neurocom.cardvault.domain.Card;
+import com.niafu.cardvault.domain.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

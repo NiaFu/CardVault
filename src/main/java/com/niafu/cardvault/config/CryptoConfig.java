@@ -1,4 +1,4 @@
-package com.neurocom.cardvault.config;
+package com.niafu.cardvault.config;
 /**
  * Read the AES Key from the environment variable and register it to the Spring container.
  */

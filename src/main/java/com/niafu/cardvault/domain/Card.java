@@ -1,4 +1,4 @@
-package com.neurocom.cardvault.domain;
+package com.niafu.cardvault.domain;
 /**
  * Card entity.
  *

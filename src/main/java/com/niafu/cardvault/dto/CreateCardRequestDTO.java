@@ -1,4 +1,4 @@
-package com.neurocom.cardvault.dto;
+package com.niafu.cardvault.dto;
 /**
  * Request DTO for creating a new card.
  *

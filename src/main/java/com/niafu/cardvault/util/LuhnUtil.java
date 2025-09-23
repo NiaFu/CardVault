@@ -1,4 +1,4 @@
-package com.neurocom.cardvault.util;
+package com.niafu.cardvault.util;
 
 /**
  * Verify the cards information

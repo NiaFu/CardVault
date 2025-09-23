@@ -1,4 +1,4 @@
-package com.neurocom.cardvault;
+package com.niafu.cardvault;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

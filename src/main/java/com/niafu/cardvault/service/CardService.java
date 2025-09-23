@@ -1,4 +1,4 @@
-package com.neurocom.cardvault.service;
+package com.niafu.cardvault.service;
 /**
  * Service layer for managing cards.
  *
@@ -9,21 +9,19 @@ package com.neurocom.cardvault.service;
  * Sensitive data is encrypted via CryptoService entity and masked in responses.
  */
 
-import com.neurocom.cardvault.crypto.CryptoService;
-import com.neurocom.cardvault.domain.Card;
-import com.neurocom.cardvault.domain.CardSecret;
-import com.neurocom.cardvault.dto.CardResponseDTO;
-import com.neurocom.cardvault.dto.CreateCardRequestDTO;
-import com.neurocom.cardvault.repo.CardRepository;
-import com.neurocom.cardvault.util.LuhnUtil;
-import com.neurocom.cardvault.util.MaskingUtil;
+import com.niafu.cardvault.crypto.CryptoService;
+import com.niafu.cardvault.domain.Card;
+import com.niafu.cardvault.domain.CardSecret;
+import com.niafu.cardvault.dto.CardResponseDTO;
+import com.niafu.cardvault.dto.CreateCardRequestDTO;
+import com.niafu.cardvault.repo.CardRepository;
+import com.niafu.cardvault.util.MaskingUtil;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service

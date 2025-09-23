@@ -1,4 +1,4 @@
-package com.neurocom.cardvault.util;
+package com.niafu.cardvault.util;
 /**
  * Utility for masking PAN values for safe display.
  */

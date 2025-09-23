@@ -1,4 +1,4 @@
-package com.neurocom.cardvault.dto;
+package com.niafu.cardvault.dto;
 /**
  * Response DTO for returning card details.
  *

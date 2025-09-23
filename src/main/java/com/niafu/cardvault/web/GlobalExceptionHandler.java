@@ -1,4 +1,4 @@
-package com.neurocom.cardvault.web;
+package com.niafu.cardvault.web;
 /**
  * Global exception handler.
  *

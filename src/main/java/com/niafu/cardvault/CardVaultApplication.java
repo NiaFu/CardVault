@@ -1,4 +1,4 @@
-package com.neurocom.cardvault;
+package com.niafu.cardvault;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

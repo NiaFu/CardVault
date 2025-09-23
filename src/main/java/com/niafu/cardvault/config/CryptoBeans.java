@@ -1,9 +1,9 @@
-package com.neurocom.cardvault.config;
+package com.niafu.cardvault.config;
 /**
  * CryptoService Injection into Spring
  */
 
-import com.neurocom.cardvault.crypto.CryptoService;
+import com.niafu.cardvault.crypto.CryptoService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

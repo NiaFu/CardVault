@@ -1,4 +1,4 @@
-package com.neurocom.cardvault.crypto;
+package com.niafu.cardvault.crypto;
 /**
  * Provides AES-GCM encryption and decryption for PAN values.
  */
@@ -33,7 +33,7 @@ public class CryptoService {
     public EncResult encrypt(String plaintext) {
         try {
             byte[] iv = new byte[IV_LENGTH];
-            random.nextBytes(iv); // 生成随机 IV
+            random.nextBytes(iv); // random IV
 
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(Cipher.ENCRYPT_MODE, key, new GCMParameterSpec(GCM_TAG_BITS, iv));

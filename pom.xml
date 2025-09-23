@@ -8,7 +8,7 @@
         <version>3.5.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.neurocom</groupId>
+    <groupId>com.niafu</groupId>
     <artifactId>CardVault</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>CardVault</name>

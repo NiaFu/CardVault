@@ -1,6 +1,6 @@
-package com.neurocom.cardvault.repo;
+package com.niafu.cardvault.repo;
 
-import com.neurocom.cardvault.domain.CardSecret;
+import com.niafu.cardvault.domain.CardSecret;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

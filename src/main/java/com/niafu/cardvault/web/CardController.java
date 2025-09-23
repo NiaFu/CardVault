@@ -1,4 +1,4 @@
-package com.neurocom.cardvault.web;
+package com.niafu.cardvault.web;
 
 /**
  * REST controller for card operations.
@@ -8,10 +8,9 @@ package com.neurocom.cardvault.web;
  * - Search cards by last 4 digits (GET /api/cards)
  */
 
-import com.neurocom.cardvault.domain.Card;
-import com.neurocom.cardvault.dto.CardResponseDTO;
-import com.neurocom.cardvault.dto.CreateCardRequestDTO;
-import com.neurocom.cardvault.service.CardService;
+import com.niafu.cardvault.dto.CardResponseDTO;
+import com.niafu.cardvault.dto.CreateCardRequestDTO;
+import com.niafu.cardvault.service.CardService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.web.bind.annotation.*;
